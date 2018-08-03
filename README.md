@@ -1,7 +1,12 @@
-# React Native Video Player
+# React Native Video Player 
+
+Updated: Dependencies and merged fullscreen button for Android (See PR #38 if you need fullscreen in Android)
+Fix: Callbacks that are not working in PR #38
+
 
 A React Native video player with a few controls. This player uses
 react-native-video for the video playback.
+
 
 
 ![demo gif](https://raw.githubusercontent.com/cornedor/react-native-video-player/master/demo.gif "Demo GIF")
@@ -13,6 +18,8 @@ npm install --save react-native-video-player react-native-video react-native-vec
 react-native link react-native-video
 react-native link react-native-vector-icons
 ```
+
+Make sure you have followed all the steps to implement Native module bridge from PR#38
 
 ## Props
 
