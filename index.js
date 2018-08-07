@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Image, ImageBackground, Platform, StyleSheet, TouchableOpacity, View, ViewPropTypes, NativeModules } from 'react-native';
+import { Image, ImageBackground, Platform, StyleSheet, TouchableOpacity, View, ViewPropTypes, NativeModules, DeviceEventEmitter } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Video from 'react-native-video'; // eslint-disable-line
+import uuidv4 from 'uuid';
 
 const BackgroundImage = ImageBackground || Image; // fall back to Image if RN < 0.46
 
@@ -89,11 +90,13 @@ export default class VideoPlayer extends Component {
   constructor(props) {
     super(props);
 
+    this.id = uuidv4();
     this.state = {
       isStarted: props.autoplay,
       isPlaying: props.autoplay,
       width: 200,
       progress: 0,
+      currentTime: 0,
       isMuted: props.defaultMuted,
       isControlsVisible: !props.hideControlsOnStart,
       duration: 0,
@@ -118,12 +121,15 @@ export default class VideoPlayer extends Component {
     this.onSeekGrant = this.onSeekGrant.bind(this);
     this.onSeekRelease = this.onSeekRelease.bind(this);
     this.onSeek = this.onSeek.bind(this);
+    this.onReturnFromFullScreen = this.onReturnFromFullScreen.bind(this);
   }
 
   componentDidMount() {
     if (this.props.autoplay) {
       this.hideControls();
     }
+
+    this.listener = DeviceEventEmitter.addListener('toggleFullscreen', this.onReturnFromFullScreen);
   }
 
   componentWillUnmount() {
@@ -131,6 +137,8 @@ export default class VideoPlayer extends Component {
       clearTimeout(this.controlsTimeout);
       this.controlsTimeout = null;
     }
+
+    this.listener.remove();
   }
 
   onLayout(event) {
@@ -163,6 +171,7 @@ export default class VideoPlayer extends Component {
     }
     this.setState({
       progress: event.currentTime / (this.props.duration || this.state.duration),
+      currentTime: event.currentTime
     });
   }
 
@@ -216,14 +225,30 @@ export default class VideoPlayer extends Component {
   }
 
   onToggleFullScreen() {
-    if(Platform.OS === "android")
-    {
-      var uri = this.props.video.uri;
-      NativeModules.BridgeModule.showFullscreen(uri);
-    }
-    else
-    {
+    const { uri } = this.props.video;
+    const { currentTime } = this.state;
+
+    if (Platform.OS === "android") {
+      this.pause();
+      NativeModules.BridgeModule.showFullscreen(uri, currentTime * 1000, this.id);
+    } else {
       this.player.presentFullscreenPlayer();
+    }
+  }
+
+  onReturnFromFullScreen({ currentTime, playerId }) {
+    if (playerId === this.id && this.player) {
+      const { duration } = this.state;
+      const startPos = currentTime / 1000;
+      const progress = startPos / duration;
+
+      this.setState({
+        currentTime: startPos,
+        progress
+      }, () => {
+        this.seek(progress * duration);
+        this.resume();
+      });
     }
   }
 
@@ -395,7 +420,7 @@ export default class VideoPlayer extends Component {
             customStyles.seekBarProgress,
           ]}
         />
-        { !fullWidth && !disableSeek ? (
+        {!fullWidth && !disableSeek ? (
           <View
             style={[
               styles.seekBarKnob,
@@ -411,7 +436,7 @@ export default class VideoPlayer extends Component {
             onResponderRelease={this.onSeekRelease}
             onResponderTerminate={this.onSeekRelease}
           />
-        ) : null }
+        ) : null}
         <View style={[
           styles.seekBarBackground,
           { flexGrow: 1 - this.state.progress },
