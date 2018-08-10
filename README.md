@@ -1,9 +1,16 @@
-# React Native Video Player 
-
-Updated: Dependencies and merged fullscreen button for Android (See PR #38 if you need fullscreen in Android)
-Fix: Callbacks that are not working in PR #38
+# React Native Video Player
 
 
+## Updates
+
+* Fullscreen video for Android (see [PR#38](https://github.com/cornedor/react-native-video-player/pull/38))
+* Fixed callbacks for [react-native-video](https://github.com/react-native-community/react-native-video)
+* Video playback sync between fullscreen native module and RN component (Android)
+* Method changes
+  * `isPlaying` method added
+  * `onPlayPress` returns video status (playing/paused)
+
+---
 A React Native video player with a few controls. This player uses
 react-native-video for the video playback.
 
@@ -78,13 +85,4 @@ All other props are passed to the react-native-video component.
 | stop                    |                 | Stop the playback and reset back to 0:00.                                 |
 | pause                   |                 | Pause the playback.                                                       |
 | resume                  |                 | Resume the playback.                                                      |
-
-## Future features
-
-- [X] Make seek bar seekable.
-- [x] Make player customizable.
-- [ ] Add volume control
-- [X] Add fullscreen button
-  - [ ] Add fullscreen button for Android (See PR #38 if you need fullscreen in Android)
-- [ ] Add loader
-- [ ] Add video duration/play time
+| isPlaying                  |                 | The current status of the video.                                                      |
