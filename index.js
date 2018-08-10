@@ -207,12 +207,14 @@ export default class VideoPlayer extends Component {
   }
 
   onPlayPress() {
+    const newState = !this.state.isPlaying;
+
     if (this.props.onPlayPress) {
-      this.props.onPlayPress();
+      this.props.onPlayPress(newState);
     }
 
     this.setState({
-      isPlaying: !this.state.isPlaying,
+      isPlaying: newState,
     });
     this.showControls();
   }
@@ -369,6 +371,10 @@ export default class VideoPlayer extends Component {
       isPlaying: true,
     });
     this.showControls();
+  }
+
+  isPlaying() {
+    return this.state.isPlaying;
   }
 
   renderStartButton() {
