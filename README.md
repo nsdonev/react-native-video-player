@@ -6,7 +6,8 @@
 * Fullscreen video for Android (see [PR#38](https://github.com/cornedor/react-native-video-player/pull/38))
 * Fixed callbacks for [react-native-video](https://github.com/react-native-community/react-native-video)
 * Video playback sync between fullscreen native module and RN component (Android)
-* Method changes
+* Prop & method changes
+  * `onFullscreenDismiss` prop added (Android)
   * `isPlaying` method added
   * `onPlayPress` returns video status (playing/paused)
 
@@ -54,6 +55,7 @@ Make sure you have followed all the steps to implement Native module bridge from
 | onPlayPress             | Callback for when the play button is pressed.                                               |
 | onHideControls          | Callback for when the controls are being hide.                                              |
 | onShowControls          | Callback for when the controls are being shown.                                             |
+| onFullscreenDismiss     | Callback for when the user exits fullscreen (Android).                                 |
 | customStyles            | The player can be customized in this object, see customStyles for the options.              |
 
 All other props are passed to the react-native-video component.

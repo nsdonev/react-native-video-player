@@ -251,6 +251,10 @@ export default class VideoPlayer extends Component {
         this.seek(progress * duration);
         this.resume();
       });
+
+      if (this.props.onFullscreenDismiss) {
+        this.props.onFullscreenDismiss();
+      }
     }
   }
 
@@ -612,6 +616,7 @@ VideoPlayer.propTypes = {
   onPlayPress: PropTypes.func,
   onHideControls: PropTypes.func,
   onShowControls: PropTypes.func,
+  onFullscreenDismiss: PropTypes.func
 };
 
 VideoPlayer.defaultProps = {
