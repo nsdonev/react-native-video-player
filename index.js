@@ -467,7 +467,7 @@ export default class VideoPlayer extends Component {
           <Icon
             style={[styles.playControl, customStyles.controlIcon, customStyles.playIcon]}
             name={this.state.isPlaying ? 'pause' : 'play-arrow'}
-            size={32}
+            size={customStyles.playControlButtonFontSize || 32}
           />
         </TouchableOpacity>
         {this.renderSeekBar()}
@@ -476,7 +476,7 @@ export default class VideoPlayer extends Component {
             <Icon
               style={[styles.extraControl, customStyles.controlIcon]}
               name={this.state.isMuted ? 'volume-off' : 'volume-up'}
-              size={24}
+              size={customStyles.muteControlButtonFontSize || 24}
             />
           </TouchableOpacity>
         )}
@@ -484,7 +484,7 @@ export default class VideoPlayer extends Component {
           <Icon
             style={[styles.extraControl, customStyles.controlIcon]}
             name="fullscreen"
-            size={32}
+            size={customStyles.fullscreenControlButtonFontSize || 32}
           />
         </TouchableOpacity>
       </View>
